@@ -2,8 +2,6 @@ import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FolderKanban } from "lucide-react"
 
-export const dynamic = "force-dynamic"
-
 type Project = {
   id: string
   title: string
