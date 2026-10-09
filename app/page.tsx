@@ -8,6 +8,7 @@ type Project = {
   id: string
   title: string
   description: string
+  images?: string[]
   created_at: string
 }
 
@@ -16,7 +17,7 @@ async function ProjectsList() {
 
   const { data: projects, error } = await supabase
     .from("projects")
-    .select("id, title, description, created_at")
+    .select("id, title, description, images, created_at")
     .order("created_at", { ascending: false })
 
   if (error) {
@@ -44,9 +45,27 @@ async function ProjectsList() {
           {list.map((project) => (
             <Card 
               key={project.id} 
-              className="relative overflow-hidden group bg-slate-900/60 backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-[0_0_25px_rgba(56,189,248,0.15)] hover:-translate-y-1"
+              className="relative overflow-hidden group bg-slate-900/60 backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-[0_0_25px_rgba(56,189,248,0.15)] hover:-translate-y-1 flex flex-col"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-radial from-cyan-500/10 via-purple-500/5 to-transparent rounded-full -mr-10 -mt-10 pointer-events-none group-hover:from-cyan-500/20 transition-all" />
+              
+              {/* Se tiver imagens, mostra a primeira em destaque ou galeria */}
+              {project.images && project.images.length > 0 && (
+                <div className="relative aspect-video w-full overflow-hidden border-b border-cyan-500/20 bg-slate-950/80">
+                  <img
+                    src={project.images[0]}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  {project.images.length > 1 && (
+                    <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md text-[11px] font-mono bg-slate-950/80 text-cyan-300 border border-cyan-500/30 backdrop-blur-md">
+                      +{project.images.length - 1} fotos
+                    </span>
+                  )}
+                </div>
+              )}
+
               <CardHeader className="relative z-10 pb-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
@@ -65,10 +84,26 @@ async function ProjectsList() {
                   {project.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="relative z-10">
+              <CardContent className="relative z-10 flex-1 space-y-4">
                 <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">
                   {project.description}
                 </p>
+
+                {/* Se houver mais do que 1 imagem, exibe as miniaturas adicionais */}
+                {project.images && project.images.length > 1 && (
+                  <div className="grid grid-cols-4 gap-2 pt-2">
+                    {project.images.slice(1).map((imgUrl, idx) => (
+                      <div key={idx} className="relative aspect-square rounded-md overflow-hidden border border-cyan-500/20 bg-slate-950/60">
+                        <img
+                          src={imgUrl}
+                          alt={`${project.title} miniatura ${idx + 2}`}
+                          className="w-full h-full object-cover hover:scale-110 transition-transform"
+                          loading="lazy"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
