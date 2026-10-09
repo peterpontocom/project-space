@@ -43,12 +43,12 @@ async function ProjectsList() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2">
           {list.map((project) => (
-            <Card 
-              key={project.id} 
+            <Card
+              key={project.id}
               className="relative overflow-hidden group bg-slate-900/60 backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-[0_0_25px_rgba(56,189,248,0.15)] hover:-translate-y-1 flex flex-col"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-radial from-cyan-500/10 via-purple-500/5 to-transparent rounded-full -mr-10 -mt-10 pointer-events-none group-hover:from-cyan-500/20 transition-all" />
-              
+
               {/* Se tiver imagens, mostra a primeira em destaque ou galeria */}
               {project.images && project.images.length > 0 && (
                 <div className="relative aspect-video w-full overflow-hidden border-b border-cyan-500/20 bg-slate-950/80">
@@ -171,7 +171,7 @@ export default function Home() {
         <div className="mx-auto max-w-5xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex items-center gap-2 text-slate-400">
             <Orbit className="h-4 w-4 text-cyan-400" />
-            <span>Project Space &copy; {new Date().getFullYear()} — Plataforma Cósmica</span>
+            <span>Project Space &copy; {new Date().getFullYear()} — Plataforma Cósmica .com</span>
           </div>
           <div className="font-mono text-cyan-400/60">
             Deep Space Exploration Protocol v2.0
