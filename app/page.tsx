@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FolderKanban } from "lucide-react"
 
+import { Suspense } from "react"
+
 type Project = {
   id: string
   title: string
@@ -9,7 +11,7 @@ type Project = {
   created_at: string
 }
 
-export default async function Home() {
+async function ProjectsList() {
   const supabase = await createClient()
 
   const { data: projects, error } = await supabase
@@ -23,6 +25,42 @@ export default async function Home() {
 
   const list = (projects as Project[] | null) ?? []
 
+  return (
+    <>
+      {list.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-border py-20 text-center">
+          <p className="text-muted-foreground">
+            Nenhum projeto publicado ainda.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2">
+          {list.map((project) => (
+            <Card key={project.id} className="transition-shadow hover:shadow-md">
+              <CardHeader>
+                <CardTitle className={"text-lg"}>{project.title}</CardTitle>
+                <CardDescription>
+                  {new Date(project.created_at).toLocaleDateString("pt-PT", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  {project.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </>
+  )
+}
+
+export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border">
@@ -40,35 +78,9 @@ export default async function Home() {
           </p>
         </div>
 
-        {list.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border py-20 text-center">
-            <p className="text-muted-foreground">
-              Nenhum projeto publicado ainda.
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2">
-            {list.map((project) => (
-              <Card key={project.id} className="transition-shadow hover:shadow-md">
-                <CardHeader>
-                  <CardTitle className={"text-lg"}>{project.title}</CardTitle>
-                  <CardDescription>
-                    {new Date(project.created_at).toLocaleDateString("pt-PT", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                    {project.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        <Suspense fallback={<div className="py-20 text-center text-muted-foreground">A carregar projetos...</div>}>
+          <ProjectsList />
+        </Suspense>
       </main>
 
       <footer className="border-t border-border mt-auto">
