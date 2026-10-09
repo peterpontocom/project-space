@@ -53,7 +53,7 @@ export default async function Home() {
             {list.map((project) => (
               <Card key={project.id} className="transition-shadow hover:shadow-md">
                 <CardHeader>
-                  <CardTitle className="text-lg font-semibold">{project.title}</CardTitle>
+                  <CardTitle className={"text-lg"}>{project.title}</CardTitle>
                   <CardDescription>
                     {new Date(project.created_at).toLocaleDateString("pt-PT", {
                       day: "numeric",
