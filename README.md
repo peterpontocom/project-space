@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Space
 
-## Getting Started
+Plataforma pública para visualizar projetos.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js 16 (App Router)
+- Supabase (Auth + Database)
+- Tailwind CSS 4 + shadcn/ui
+- TypeScript
+
+## Configuração
+
+1. Crie um projeto no [Supabase](https://supabase.com).
+2. Execute o SQL abaixo no SQL Editor do Supabase:
+
+```sql
+create table public.projects (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  description text not null,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  created_by uuid references auth.users(id)
+);
+
+alter table public.projects enable row level security;
+
+create policy "Qualquer pessoa pode ver projetos"
+  on public.projects for select
+  using (true);
+
+create policy "Utilizadores autenticados podem inserir"
+  on public.projects for insert
+  with check (auth.role() = 'authenticated');
+
+create policy "Utilizadores autenticados podem atualizar"
+  on public.projects for update
+  using (auth.role() = 'authenticated');
+
+create policy "Utilizadores autenticados podem apagar"
+  on public.projects for delete
+  using (auth.role() = 'authenticated');
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Ative o provider **Google** em Authentication → Providers.
+4. Configure as Redirect URLs em Authentication → URL Configuration (inclua `http://localhost:3000/**` e `http://localhost:3001/**`).
+5. Copie `.env.example` para `.env.local` e preencha as variáveis.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+6. Instale e rode:
 
-## Learn More
+```bash
+pnpm install
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Abra [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Este app é apenas de leitura.
+- O painel de administração fica no repositório `project-space-admin`.
