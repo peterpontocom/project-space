@@ -172,7 +172,7 @@ export default function Home() {
           <div className="flex items-center gap-2 text-slate-400">
             <Orbit className="h-4 w-4 text-cyan-400" />
             <span>Project Space &copy; {new Date().getFullYear()} — Plataforma Cósmica</span>
-            <span className="opacity-5">Pontocom</span>
+            <span className="opacity-50">Pontocom</span>
           </div>
           <div className="font-mono text-cyan-400/60">
             Semana Espacial v10.0
