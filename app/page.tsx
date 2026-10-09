@@ -171,10 +171,11 @@ export default function Home() {
         <div className="mx-auto max-w-5xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex items-center gap-2 text-slate-400">
             <Orbit className="h-4 w-4 text-cyan-400" />
-            <span>Project Space &copy; {new Date().getFullYear()} — Plataforma Cósmica .com</span>
+            <span>Project Space &copy; {new Date().getFullYear()} — Plataforma Cósmica</span>
+            <span className="opacity-5">Pontocom</span>
           </div>
           <div className="font-mono text-cyan-400/60">
-            Deep Space Exploration Protocol v2.0
+            Semana Espacial v10.0
           </div>
         </div>
       </footer>
